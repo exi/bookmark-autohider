@@ -27,6 +27,10 @@ var bookmarkhider = {
     getToolbar: function() {
         return document.getElementById("PersonalToolbar");
     },
+    //check for macos
+    isMacOS: function() {
+        return navigator.appVersion.toLowerCase().indexOf("mac") > 0;;
+    },
     //this function is called whenever the mouse leaves the bookmark toolbar
     mouseout: function() {
         bookmarkhider.out = true;
@@ -53,7 +57,8 @@ var bookmarkhider = {
     //this function is called whenever the toolbar should show up
     show: function() {
         this.resetStyle();
-        this.getToolbar().collapsed=false;
+        this.getToolbar().collapsed = false;
+        this.getStyle().visibility = "visible";
     },
     //this function is called whenever the toolbar should hide and performs the movement
     hide: function() {
@@ -64,6 +69,10 @@ var bookmarkhider = {
             if (isNaN(parseFloat(style.minHeight))) {
                 this.resetStyle();
             }
+            if (this.isMacOS()) {
+                curHeight = style.minHeight;//macos dirty hack
+            }
+
             if (curHeight > 0) {
                 var newH
                 if ( this.getSlideBool() )
@@ -75,8 +84,10 @@ var bookmarkhider = {
                 style.maxHeight = newH;
                 if ( this.getSlideBool() )
                     window.setTimeout('bookmarkhider.hide();', this.hideInterval );
-            }else
+            }else {
                 this.getToolbar().collapsed=true;
+                this.getStyle().visibility="collapse";
+            }
         }
     }
 };
