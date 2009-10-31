@@ -1,0 +1,6 @@
+content   bookmarkhider                 chrome/content/
+skin      bookmarkhider   classic/1.0   chrome/skin/
+locale    bookmarkhider   en-US         chrome/locale/en-US/
+
+
+overlay   chrome://browser/content/browser.xul   chrome://bookmarkhider/content/ff-overlay.xul
