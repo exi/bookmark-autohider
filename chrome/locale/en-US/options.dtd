@@ -6,3 +6,5 @@
 <!ENTITY slidetime.accesskey "L">
 <!ENTITY opentime.label "The time in ms the toolbar should stay open at least.">
 <!ENTITY opentime.accesskey "O">
+<!ENTITY opendelay.label "The time in ms the toolbar should stay closed if the mouse is above.">
+<!ENTITY opendelay.accesskey "D">

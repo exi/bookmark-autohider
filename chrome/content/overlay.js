@@ -1,9 +1,10 @@
 var bookmarkhider = {
     prefix: "extensions.bookmarkhider.", //the memory path prefix
     prefs: Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch), //memory service
-    out: 0, //wheter the mouse is outside of the toolbar
+    out: 1, //wheter the mouse is outside of the toolbar
     lastover: 0, //the last time in ms when the mouse was above the toolbar
-    hideInverval: 50, //the tick intervall in ms used to slide the toolbar in
+    hideInterval: 50, //the tick intervall in ms used to slide the toolbar in
+    intervalObj: undefined, //the interval object used to animate
     onLoad: function() {
         // initialization code
         this.initialized = true;
@@ -16,6 +17,9 @@ var bookmarkhider = {
     },
     getOpentime: function() {
         return this.prefs.getIntPref(this.prefix+"opentime");
+    },
+    getOpendelay: function() {
+        return this.prefs.getIntPref(this.prefix+"opendelay");
     },
     getStyle: function() {
         return this.getToolbar().style;
@@ -33,20 +37,31 @@ var bookmarkhider = {
     },
     //this function is called whenever the mouse leaves the bookmark toolbar
     mouseout: function() {
-        bookmarkhider.out = true;
-        var mydate = new Date();
-        var mytime = mydate.getTime();
-        if (mytime - this.lastover < this.getOpentime() ) {
+        if ( !this.out ) {
+            this.out = true;
+            var mytime = ( new Date() ).getTime();
+            if (mytime - this.lastover < this.getOpentime() ) {
                 window.setTimeout('bookmarkhider.hide();', this.getOpentime() - (mytime - this.lastover));
-        }else
-            this.hide();
+            } else
+                this.hide();
+        }
     },
     //this function is calles whenever the mouse enters the toolbar
     mouseover: function() {
+        if ( this.out ) {
+            this.clearInterval();
+            this.out = false;
+            this.lastover = ( new Date() ).getTime();
+            if (this.getOpendelay() > 0) {
+                window.setTimeout('bookmarkhider.show();',this.getOpendelay());
+            } else {
+                this.show();
+            }
+        }
+    },
+    //let the toobar stay open
+    stayopen: function() {
         this.out = false;
-        var date = new Date();
-        this.lastover = date.getTime();
-        this.show();
     },
     //this function resets the toolbar stylings (aka, opens the toolbar) 
     resetStyle: function() {
@@ -54,39 +69,60 @@ var bookmarkhider = {
         style.minHeight = "20px";
         style.maxHeight = "";
     },
+    //this function sets the interval object
+    setInterval: function (func) {
+        if ( typeof(this.intervalObj) == 'undefined' )
+            this.intervalObj = window.setInterval(func, this.hideInterval );
+    },
+    //this function cleans the interval object
+    clearInterval: function() {
+        window.clearInterval(this.intervalObj);
+        this.intervalObj = undefined;
+    },
+    //this function collapses the bar
+    collapse: function() {
+        this.getToolbar().collapsed=true;
+        this.getStyle().visibility="collapse";
+    },
     //this function is called whenever the toolbar should show up
     show: function() {
-        this.resetStyle();
-        this.getToolbar().collapsed = false;
-        this.getStyle().visibility = "visible";
+        if ( !this.out ) {
+            this.resetStyle();
+            this.getToolbar().collapsed = false;
+            this.getStyle().visibility = "visible";
+        }
     },
     //this function is called whenever the toolbar should hide and performs the movement
     hide: function() {
-        if ( this.out == true ) {
-            var stepping = (20/this.getSlidetime())*this.hideInverval;
+        if ( this.out ) {
             var style = this.getStyle();
             var curHeight = this.getCompHeight();
-            if (isNaN(parseFloat(style.minHeight))) {
-                this.resetStyle();
-            }
-            if (this.isMacOS()) {
-                curHeight = style.minHeight;//macos dirty hack
-            }
+            if (curHeight > 0 && this.getSlideBool() ) {
+                var stepping = (20/this.getSlidetime())*this.hideInterval;
 
-            if (curHeight > 0) {
-                var newH
-                if ( this.getSlideBool() )
-                    newH = (parseFloat(curHeight)-stepping)+"px";
-                else
-                    newH = "2px";
-                if (parseFloat(style.minHeight) >= parseFloat(style.maxHeight) || !this.getSlideBool())
+                if (isNaN(parseFloat(style.minHeight))) {
+                    this.resetStyle();
+                }
+
+                if (this.isMacOS()) {
+                    curHeight = style.minHeight;//macos dirty hack
+                }
+
+                var newH = (parseFloat(curHeight)-stepping)+"px";
+
+                if (parseFloat(style.minHeight) >= parseFloat(style.maxHeight))
                     style.minHeight = newH;
+
                 style.maxHeight = newH;
-                if ( this.getSlideBool() )
-                    window.setTimeout('bookmarkhider.hide();', this.hideInterval );
-            }else {
-                this.getToolbar().collapsed=true;
-                this.getStyle().visibility="collapse";
+
+                this.setInterval('bookmarkhider.hide();');
+            } else {
+                this.clearInterval();
+                style.minHeight = "0px";
+                style.maxHeight = "0px";
+                this.out = true;
+                this.lastover = 0;
+                this.collapse();
             }
         }
     }

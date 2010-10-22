@@ -7,9 +7,11 @@
       <preference id="slidepref" name="extensions.bookmarkhider.slide" type="bool"/>
       <preference id="slidetimepref" name="extensions.bookmarkhider.slidetime" type="int"/>
       <preference id="opentimepref" name="extensions.bookmarkhider.opentime" type="int"/>
+      <preference id="opendelaypref" name="extensions.bookmarkhider.opendelay" type="int"/>
     </preferences>
     <checkbox id="slide" preference="slidepref" label="&slide.label;" accesskey="&slide.accesskey;"/>
-    <label accesskey="&slidetime.accesskey;" control="slidetime">&slidetime.label;</label><textbox type="number" min="1" id="slidetime" preference="slidetimepref"/>
-    <label accesskey="&opentime.accesskey;" control="opentime">&opentime.label;</label><textbox type="number" min="1" id="opentime" preference="opentimepref"/>
+    <label accesskey="&slidetime.accesskey;" control="slidetime">&slidetime.label;</label><textbox type="number" min="0" id="slidetime" preference="slidetimepref"/>
+    <label accesskey="&opentime.accesskey;" control="opentime">&opentime.label;</label><textbox type="number" min="0" id="opentime" preference="opentimepref"/>
+    <label accesskey="&opendelay.accesskey;" control="opendelay">&opendelay.label;</label><textbox type="number" min="0" id="opendelay" preference="opendelaypref"/>
   </prefpane>
 </prefwindow>

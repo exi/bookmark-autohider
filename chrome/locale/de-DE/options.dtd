@@ -6,3 +6,5 @@
 <!ENTITY slidetime.accesskey "D">
 <!ENTITY opentime.label "Zeit seit dem letzten Verlassen der Maus bis die Lesezeichenleiste geschlossen werden">
 <!ENTITY opentime.accesskey "Z">
+<!ENTITY opendelay.label "Zeit die der Mauszeiger über der Leiste verbleiben muss, bis die Lesezeichenleiste geöffnet wird">
+<!ENTITY opendelay.accesskey "O">
