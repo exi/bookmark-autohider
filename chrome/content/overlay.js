@@ -55,7 +55,7 @@ var bookmarkhider = {
             this.out = true;
             var mytime = ( new Date() ).getTime();
             if (mytime - this.lastover < this.getOpentime() ) {
-                this.outTimer = window.setTimeout('bookmarkhider.hide();', this.getOpentime() - (mytime - this.lastover));
+                this.outTimer = window.setTimeout("bookmarkhider.hide();", this.getOpentime() - (mytime - this.lastover));
             } else {
                 this.hide();
             }
@@ -86,6 +86,7 @@ var bookmarkhider = {
         style.minHeight = "5px";
         style.maxHeight = "";
 	style.height = "";
+        style.overflow = "";
 	//fixing the multibar issues
 	if ( this.useMultiBmToolbar() ) {
 	    style.setProperty("overflow-y","visible",null);
@@ -137,12 +138,13 @@ var bookmarkhider = {
                 style.minHeight = newH;
                 style.maxHeight = newH;
                 style.height = newH;
+                style.overflow = "hidden";
 
 		if ( this.useMultiBmToolbar() ) {
 		    style.setProperty("overflow-y","hidden",null);
 		}
 
-                this.setInterval('bookmarkhider.hide();');
+                this.setInterval("bookmarkhider.hide();");
 		this.curHeight = parseFloat(newH);
 		if ( this.curHeight < 1 ) {
 		    this.curHeight = 0.1;
