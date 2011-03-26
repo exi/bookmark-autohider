@@ -12,7 +12,7 @@
         ondragenter="bookmarkhider.mouseover();"
         style="visibility:collapse; min-height:2px; max-height:2px"
     />
-    <toolbox id="navigator-toolbox"
+    <toolbaritem id="urlbar-container"
         onmouseover="bookmarkhider.mouseover();"
         ondragenter="bookmarkhider.mouseover();"
     />
