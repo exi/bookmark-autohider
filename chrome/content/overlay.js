@@ -192,7 +192,7 @@ var bookmarkhider = function() {
             if (me.getOpendelay() > 0) {
                 me.overTimer = window.setTimeout(function() { return me.show;}(),me.getOpendelay());
             } else {
-                //me.show();
+                me.show();
             }
         }
     };
