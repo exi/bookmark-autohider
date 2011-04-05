@@ -15,6 +15,7 @@ var bookmarkhider = function() {
     me.onLoad = function() {
         // initialization code
         me.initialized = true;
+        setToolbarVisibility(me.getToolbar(), true);
         me.getToolbar().addEventListener("mouseover", function() { return me.mouseover;}(), false);
         me.getToolbar().addEventListener("dragenter", function() { return me.mouseover;}(), false);
         me.getUrlbarContainer().addEventListener("mouseover", function() { return me.mouseover;}(), false);
