@@ -3,10 +3,7 @@
 <!DOCTYPE overlay SYSTEM "chrome://bookmarkhider/locale/overlay.dtd">
 <overlay id="bookmarkhider-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
     <script src="overlay.js"/>
-    <script src="ff-overlay.js"/>
-    <script src="bookmarkhider.js"/>
 
-    <script type="application/x-javascript" src="chrome://bookmarkhider/content/bookmarkhider.js"/>
     <toolbar id="PersonalToolbar"
         style="visibility:collapse; min-height:2px; max-height:2px"
     />
