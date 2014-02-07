@@ -1,5 +1,5 @@
-var bookmarkhider = function() {
-    var me = this;
+var bookmarkhider = (function() {
+    var me = {};
 
     me.prefix = "extensions.bookmarkhider."; //the memory path prefix
     me.prefs = Components.classes["@mozilla.org/preferences-service;1"].getService(Components.interfaces.nsIPrefBranch); //memory service
@@ -16,11 +16,11 @@ var bookmarkhider = function() {
         // initialization code
         me.initialized = true;
         setToolbarVisibility(me.getToolbar(), true);
-        me.getToolbar().addEventListener("mouseover", function() { return me.mouseover;}(), false);
-        me.getToolbar().addEventListener("dragenter", function() { return me.mouseover;}(), false);
-        me.getUrlbarContainer().addEventListener("mouseover", function() { return me.mouseover;}(), false);
-        me.getUrlbarContainer().addEventListener("dragenter", function() { return me.mouseover;}(), false);
-        me.getContent().addEventListener("mouseover", function() { return me.mouseout;}(), false);
+        me.getToolbar().addEventListener("mouseover", me.mouseover, false);
+        me.getToolbar().addEventListener("dragenter", me.mouseover, false);
+        me.getUrlbarContainer().addEventListener("mouseover", me.mouseover, false);
+        me.getUrlbarContainer().addEventListener("dragenter", me.mouseover, false);
+        me.getContent().addEventListener("mouseover", me.mouseout, false);
     },
 
     me.getToolbar = function() {
@@ -57,7 +57,7 @@ var bookmarkhider = function() {
 
     me.getCompHeight = function() {
         var docObj = me.getToolbar();
-	var height = parseFloat(document.defaultView.getComputedStyle(docObj, "").getPropertyValue("height"));
+        var height = parseFloat(document.defaultView.getComputedStyle(docObj, "").getPropertyValue("height"));
         return height;  
     };
 
@@ -67,11 +67,11 @@ var bookmarkhider = function() {
     };
 
     me.useMultiBmToolbar = function() {
-	var ret = false;
-	try {
-	    ret = me.prefs.getBoolPref("extensions.multibmtoolbar.enable");
-	} catch(e) { }
-	return ret;
+        var ret = false;
+        try {
+            ret = me.prefs.getBoolPref("extensions.multibmtoolbar.enable");
+        } catch(e) { }
+        return ret;
     };
 
     //let the toobar stay open
@@ -84,12 +84,12 @@ var bookmarkhider = function() {
         var style = me.getStyle();
         style.minHeight = "5px";
         style.maxHeight = "";
-	style.height = "";
+        style.height = "";
         style.overflow = "";
-	//fixing the multibar issues
-	if ( me.useMultiBmToolbar() ) {
-	    style.setProperty("overflow-y","visible",null);
-	}
+        //fixing the multibar issues
+        if ( me.useMultiBmToolbar() ) {
+            style.setProperty("overflow-y","visible",null);
+        }
 
     };
 
@@ -120,8 +120,8 @@ var bookmarkhider = function() {
             me.resetStyle();
             me.getToolbar().collapsed = false;
             me.getStyle().visibility = "visible";
-	    me.curHeight = me.getCompHeight();
-	    me.origHeight = me.getCompHeight();
+            me.curHeight = me.getCompHeight();
+            me.origHeight = me.getCompHeight();
         }
     };
 
@@ -147,15 +147,15 @@ var bookmarkhider = function() {
                 style.height = newH;
                 style.overflow = "hidden";
 
-		if ( me.useMultiBmToolbar() ) {
-		    style.setProperty("overflow-y","hidden",null);
-		}
+                if ( me.useMultiBmToolbar() ) {
+                    style.setProperty("overflow-y","hidden",null);
+                }
 
                 me.setMyInterval(function() { return me.hide;}());
-		me.curHeight = parseFloat(newH);
-		if ( me.curHeight < 1 ) {
-		    me.curHeight = 0.1;
-		}
+                me.curHeight = parseFloat(newH);
+                if ( me.curHeight < 1 ) {
+                    me.curHeight = 0.1;
+                }
             } else {
                 me.clearMyInterval();
                 style.minHeight = "0px";
@@ -170,12 +170,12 @@ var bookmarkhider = function() {
     //this function is called whenever the mouse leaves the bookmark toolbar
     me.mouseout = function() {
         if ( !me.out ) {
-	    if ( me.outTimer)
-	        window.clearTimeout( me.outTimer );
+            if ( me.outTimer)
+                window.clearTimeout( me.outTimer );
             me.out = true;
             var mytime = ( new Date() ).getTime();
             if (mytime - me.lastover < me.getOpentime() ) {
-                me.outTimer = window.setTimeout(function() { return me.hide;}(), me.getOpentime() - (mytime - me.lastover));
+                me.outTimer = window.setTimeout(me.hide, me.getOpentime() - (mytime - me.lastover));
             } else {
                 me.hide();
             }
@@ -186,21 +186,22 @@ var bookmarkhider = function() {
     me.mouseover = function() {
         me.lastover = ( new Date() ).getTime();
         if ( me.out ) {
-	    if ( "undefined" !== typeof me.overTimer )
-	        window.clearTimeout( me.overTimer );
-            me.clearInterval();
+            if ( "undefined" !== typeof me.overTimer )
+                window.clearTimeout( me.overTimer );
+            debugger;
+            me.clearMyInterval();
             me.out = false;
             if (me.getOpendelay() > 0) {
-                me.overTimer = window.setTimeout(function() { return me.show;}(),me.getOpendelay());
+                me.overTimer = window.setTimeout(me.show, me.getOpendelay());
             } else {
                 me.show();
             }
         }
     };
 
-    window.addEventListener("load", function () { return me.onLoad; }(), false);
+    window.addEventListener("load", me.onLoad, false);
 
     //no public interface
     return {};
 
-}();
+})();

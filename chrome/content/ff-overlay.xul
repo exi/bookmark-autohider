@@ -4,8 +4,6 @@
 <overlay id="bookmarkhider-overlay" xmlns="http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul">
     <script src="overlay.js"/>
 
-    <toolbar id="PersonalToolbar"
-        style="visibility:collapse; min-height:2px; max-height:2px"
-    />
+    <toolbar id="PersonalToolbar" style="visibility:collapse; min-height:2px; max-height:2px" />
 
 </overlay>
